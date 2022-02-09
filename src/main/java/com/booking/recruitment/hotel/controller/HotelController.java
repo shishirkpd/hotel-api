@@ -27,8 +27,8 @@ public class HotelController {
 
   @GetMapping("/{hotelId}")
   @ResponseStatus(HttpStatus.OK)
-  public Hotel getHotelsById(@PathVariable String hotelId) throws NotFoundException {
-    return hotelService.getHotelsById(Long.parseLong(hotelId));
+  public Hotel getHotelsById(@PathVariable Long hotelId) throws NotFoundException {
+    return hotelService.getHotelsById(hotelId);
   }
 
 
