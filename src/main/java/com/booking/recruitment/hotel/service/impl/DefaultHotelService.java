@@ -48,7 +48,7 @@ class DefaultHotelService implements HotelService {
   @Override
   public Hotel getHotelsById(Long id) throws NotFoundException {
     Optional<Hotel> optionalHotel = hotelRepository.findById(id).filter(x -> !logicallyDeleteHotel.contains(x));
-    if(optionalHotel.stream().findFirst().orElse(null) != null)
+    if(optionalHotel.isPresent() && optionalHotel.orElseGet(null) != null)
       return optionalHotel.get();
     else
       throw new BadRequestException("The ID provided for hotel does not exist id:" + id);
