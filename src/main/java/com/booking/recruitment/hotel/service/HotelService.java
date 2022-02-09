@@ -13,4 +13,6 @@ public interface HotelService {
   Hotel createNewHotel(Hotel hotel);
 
   Hotel getHotelsById(Long id) throws NotFoundException;
+
+  void deleteHotelsById(Long hotelId) throws NotFoundException;
 }

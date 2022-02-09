@@ -31,7 +31,11 @@ public class HotelController {
     return hotelService.getHotelsById(hotelId);
   }
 
-
+  @DeleteMapping("/{hotelId}")
+  @ResponseStatus(HttpStatus.OK)
+  public void deleteHotelsById(@PathVariable Long hotelId) throws NotFoundException {
+    hotelService.deleteHotelsById(hotelId);
+  }
 
   @PostMapping
   @ResponseStatus(HttpStatus.CREATED)

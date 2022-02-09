@@ -8,6 +8,7 @@ import javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -16,6 +17,8 @@ import java.util.stream.Collectors;
 class DefaultHotelService implements HotelService {
   private final HotelRepository hotelRepository;
 
+  private List<Hotel> logicallyDeleteHotel = new ArrayList<>();
+
   @Autowired
   DefaultHotelService(HotelRepository hotelRepository) {
     this.hotelRepository = hotelRepository;
@@ -23,7 +26,7 @@ class DefaultHotelService implements HotelService {
 
   @Override
   public List<Hotel> getAllHotels() {
-    return hotelRepository.findAll();
+    return hotelRepository.findAll().stream().filter(x -> !logicallyDeleteHotel.contains(x)).collect(Collectors.toList());
   }
 
   @Override
@@ -44,10 +47,18 @@ class DefaultHotelService implements HotelService {
 
   @Override
   public Hotel getHotelsById(Long id) throws NotFoundException {
-    Optional<Hotel> optionalHotel = hotelRepository.findById(id);
-    if(optionalHotel != null)
+    Optional<Hotel> optionalHotel = hotelRepository.findById(id).filter(x -> !logicallyDeleteHotel.contains(x));
+    if(optionalHotel.stream().findFirst().orElse(null) != null)
       return optionalHotel.get();
     else
-      throw new NotFoundException("The ID {} provided for hotel does not exist" + id);
+      throw new BadRequestException("The ID provided for hotel does not exist id:" + id);
+  }
+
+  @Override
+  public void deleteHotelsById(Long hotelId) throws NotFoundException {
+    Optional<Hotel> optionalHotel = Optional.ofNullable(getHotelsById(hotelId));
+    if(optionalHotel != null) {
+     logicallyDeleteHotel.add(optionalHotel.get());
+   }
   }
 }

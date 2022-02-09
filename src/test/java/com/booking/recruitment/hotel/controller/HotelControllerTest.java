@@ -20,8 +20,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasSize;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @ExtendWith(SpringExtension.class)
@@ -52,6 +51,18 @@ class HotelControllerTest {
         .perform(get("/hotel/"+1))
         .andExpect(status().is2xxSuccessful())
         .andExpect(content().string("{\"id\":1,\"name\":\"Monaghan Hotel\",\"rating\":9.2,\"city\":{\"id\":1,\"name\":\"Amsterdam\",\"cityCentreLatitude\":52.36878,\"cityCentreLongitude\":4.903303},\"address\":\"Weesperbuurt en Plantage\",\"latitude\":52.364799,\"longitude\":4.908971,\"deleted\":false}"));
+  }
+
+  @Test
+  @DisplayName("delete hotel by id requested")
+  void deleteHotelByIdRequested() throws Exception {
+    mockMvc
+        .perform(delete("/hotel/"+2))
+        .andExpect(status().is2xxSuccessful());
+
+    mockMvc
+        .perform(get("/hotel/"+2))
+        .andExpect(status().is4xxClientError());
   }
 
   @Test
