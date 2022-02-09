@@ -2,6 +2,7 @@ package com.booking.recruitment.hotel.controller;
 
 import com.booking.recruitment.hotel.model.Hotel;
 import com.booking.recruitment.hotel.service.HotelService;
+import javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -23,6 +24,14 @@ public class HotelController {
   public List<Hotel> getAllHotels() {
     return hotelService.getAllHotels();
   }
+
+  @GetMapping("/{hotelId}")
+  @ResponseStatus(HttpStatus.OK)
+  public Hotel getHotelsById(@PathVariable String hotelId) throws NotFoundException {
+    return hotelService.getHotelsById(Long.parseLong(hotelId));
+  }
+
+
 
   @PostMapping
   @ResponseStatus(HttpStatus.CREATED)
